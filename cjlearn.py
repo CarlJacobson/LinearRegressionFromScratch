@@ -11,18 +11,18 @@ class random_line_maker:
         self.variance = variance
         self.points = points
         self.x = self.__return_x(self.intercept,self.variance,self.slope,self.points)
-        self.y = self.__return_y(self.x,self.intercept,self.variance,self.slope,self.points)
+        self.y = self.__return_y(self.x,self.variance,self.points)
         
     def __return_x(self,intercept,variance,slope,points):
-        x = np.arange(start=0,stop=points)
+        x = np.arange(start=0,stop=points,dtype=np.float64)
         return x
     
-    def __return_y(self,x,intercept,variance,slope,points):
+    def __return_y(self,x,variance,points):
         def __residuals(variance=variance):
             return [np.random.normal(scale=variance**2,loc=0) for i in range(points)] 
-        def f(x,intercept,slope):
-            return slope*x+intercept
-        y = f(x,intercept,slope)
+        def f():
+            return self.slope*self.x+self.intercept
+        y = f()
         y_with_variance = y + __residuals()
         return y_with_variance
     
@@ -36,6 +36,9 @@ class models:
             self.y = None
             self.beta1_hat = None
             self.beta0_hat = None
+            
+        def formula(self,decimals = 3):
+            return f"Y = {round(self.beta0_hat,decimals)} + {round(self.beta1_hat,decimals)} * x"
 
         def fit(self, line : random_line_maker = None, x = None,y = None):
             '''Fits data via OLS simple linear regression'''
@@ -58,11 +61,12 @@ class models:
             for i in range(n):
                 xi = self.x[i]
                 yi = self.y[i]
-                numerator+=(xi*yi)-(n*x_bar*y_bar)
-                denominator+=(xi**2)-n*(x_bar**2)
-
+                numerator+=((yi-y_bar)*(xi-x_bar))
+                denominator+=((xi-x_bar)**2)
+            
             self.beta1_hat=numerator/denominator
-            self.beta0_hat = y_bar-self.beta1_hat*x_bar      
+            self.beta0_hat = y_bar-(self.beta1_hat*x_bar)    
+            print(self.formula(decimals = 4))
 
         def predict(self,x):
             return self.beta0_hat+self.beta1_hat*x
@@ -73,3 +77,5 @@ class models:
             line = mlines.Line2D(xdata = self.x, ydata = self.predict(np.array(self.x)), color='red')
             ax.add_line(line)
             return plt  
+        
+
