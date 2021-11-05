@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import pandas as pd
+import math
+import statistics
 
 class random_line_maker:
     def __init__(self,slope=1,intercept=0,variance=1,points=10):
@@ -77,5 +79,56 @@ class models:
             line = mlines.Line2D(xdata = self.x, ydata = self.predict(np.array(self.x)), color='red')
             ax.add_line(line)
             return plt  
+        
+    class KNN:
+        def __init__(self):
+            self.X = None
+            self.y = None
+            self.K = None
+
+        def fit(self,X,y,K):
+            """Input for X is array"""
+            self.X = X
+            self.y = y
+            self.K = K
+
+        def __euclidean_distance(self,p1,p2):
+            """Returns distance between two points in x dimensions
+            Accepts arrays as inputs
+            """
+            dimensions = p1.shape[0]
+            if dimensions != p2.shape[0]:
+                raise Exception("Points must have the same number of dimensions")
+            summation = 0
+            for i in range(dimensions):
+                summation+=(p1[i]-p2[i])**2
+            return math.sqrt(summation)
+
+        def __classify(self,new_value):
+            distances = []
+            point_indices = list(range(len(self.X)))
+            y_list = list(self.y)
+            for point_index in point_indices:
+                point = self.X[point_index]
+                distance = self.__euclidean_distance(new_value,point)
+                distances.append(distance)
+            sorted_distances = sorted(zip(distances,point_indices,y_list))
+            k_sorted_distances = sorted_distances[:self.K]
+            k_classifications = [k_sorted_distances[i][2] for i in range(self.K)]
+
+            if statistics.mode(k_classifications) == statistics.mode(k_classifications[::-2]):
+                return statistics.mode(k_classifications)
+            else:
+                return statistics.mode(k_classifications) ,statistics.mode(k_classifications[::-2])
+
+        def predict(self,X):
+            if len(X.shape) > 1:
+                print(f"Shape = {X.shape[0]}")
+                predictions = []
+                for xi in X:
+                    predictions.append(self.__classify(xi))
+                return predictions
+            elif len(X.shape) == 1:
+                return self.__classify(X)
         
 
