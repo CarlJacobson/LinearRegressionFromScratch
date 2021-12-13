@@ -6,7 +6,6 @@ For fun project to practice statistics and object-oriented programming skills
 
 Current models:
 - Simple Linear Regression (OLS)
-- K-Nearest Neighbors
 
 Planning on adding:
 - Multiple regression
