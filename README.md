@@ -18,5 +18,5 @@ Planning on adding:
 - numpy (for arrays)
 - matplotlib (for plots)
 
-
+Simple linear regression usage example:
 ![Simple linear regression usage example](https://github.com/CarlJacobson/cjlearn/blob/main/Images/SLR_usage_Example.gif)
