@@ -40,6 +40,7 @@ class models:
             self.beta0_hat = None
             
         def formula(self,decimals = 3):
+            '''Returns the formula of the line estimated with OLS'''
             return f"Y = {round(self.beta0_hat,decimals)} + {round(self.beta1_hat,decimals)} * x"
 
         def fit(self, line : random_line_maker = None, x = None,y = None):
@@ -70,8 +71,11 @@ class models:
             self.beta0_hat = y_bar-(self.beta1_hat*x_bar)    
             print(self.formula(decimals = 4))
 
-        def predict(self,x):
-            return self.beta0_hat+self.beta1_hat*x
+        def predict(self,new_x):
+            """Returns estimate for unseen data"""
+            if type(new_x) != np.ndarray:
+                new_x = np.array(new_x)
+            return self.beta0_hat+self.beta1_hat*new_x
 
         def plot(self):
             fig, ax = plt.subplots()
