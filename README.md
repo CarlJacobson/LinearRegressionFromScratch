@@ -19,3 +19,4 @@ Planning on adding:
 - matplotlib (for plots)
 
 
+![Simple linear regression usage example](https://github.com/CarlJacobson/cjlearn/blob/main/Images/SLR_usage_Example.gif)
